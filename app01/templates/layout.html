@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}联通用户管理系统{% endblock %}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            background: #f4f6f9;
+            color: #333;
+        }
+        a { text-decoration: none; }
+
+        /* ===== 顶部导航 ===== */
+        .navbar {
+            background: #ffffff;
+            border-bottom: 1px solid #e6e8eb;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, .06);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            height: 56px;
+            position: relative;
+            z-index: 100;
+        }
+        .brand {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1f2d3d;
+            margin-right: 36px;
+            white-space: nowrap;
+        }
+        .nav-menu { display: flex; align-items: center; gap: 6px; }
+        .nav-item { position: relative; }
+        .nav-link {
+            display: block;
+            padding: 10px 16px;
+            color: #3a4552;
+            font-size: 15px;
+            border-radius: 4px;
+            transition: background .15s, color .15s;
+        }
+        .nav-link:hover { background: #eef2f7; color: #1890ff; }
+        .nav-link .caret { font-size: 11px; margin-left: 4px; color: #9aa5b1; }
+
+        /* 下拉菜单（部门管理 / 用户管理 / Link 共用） */
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 150px;
+            background: #fff;
+            border: 1px solid #e6e8eb;
+            border-radius: 6px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, .12);
+            padding: 6px 0;
+        }
+        .nav-item:hover .dropdown { display: block; }
+        .dropdown a {
+            display: block;
+            padding: 9px 18px;
+            color: #3a4552;
+            font-size: 14px;
+        }
+        .dropdown a:hover { background: #f0f6ff; color: #1890ff; }
+        .dropdown .divider { height: 1px; background: #eee; margin: 6px 0; }
+
+        /* 右上角登录用户 */
+        .nav-user {
+            margin-left: auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .nav-user .login-link { color: #3a4552; font-size: 15px; }
+        .nav-user .login-link:hover { color: #1890ff; }
+        .user-toggle {
+            cursor: pointer;
+            color: #3a4552;
+            font-size: 15px;
+            padding: 10px 4px;
+            user-select: none;
+        }
+        .nav-user:hover .dropdown { display: block; }
+        .nav-user .dropdown { right: 0; left: auto; }
+
+        /* ===== 内容区 ===== */
+        .container { max-width: 1200px; margin: 24px auto; padding: 0 24px; }
+
+        /* 面板卡片 */
+        .panel {
+            background: #fff;
+            border: 1px solid #e6e8eb;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, .04);
+        }
+
+        /* 按钮 */
+        .btn {
+            display: inline-block;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: opacity .15s;
+        }
+        .btn:hover { opacity: .85; }
+        .btn-success { background: #34b950; color: #fff; }
+        .btn-edit { background: #2b7bcc; color: #fff; padding: 4px 12px; font-size: 13px; }
+        .btn-del { background: #dd3737; color: #fff; padding: 4px 12px; font-size: 13px; }
+
+        /* 列表卡片 */
+        .panel-body { padding: 16px; }
+        .table-title {
+            padding: 10px 16px;
+            background: #f7f8fa;
+            border-bottom: 1px solid #e6e8eb;
+            font-size: 15px;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table th, table td {
+            padding: 10px 16px;
+            text-align: left;
+            border-bottom: 1px solid #eef0f2;
+            font-size: 14px;
+        }
+        table thead th {
+            background: #fafbfc;
+            color: #606a76;
+            font-weight: 600;
+            border-bottom: 1px solid #e6e8eb;
+        }
+        table tbody tr:hover { background: #f7faff; }
+
+        /* 表单 */
+        .panel-title {
+            padding: 12px 16px;
+            background: #f7f8fa;
+            border-bottom: 1px solid #e6e8eb;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .form-body { padding: 24px; }
+        .form-row { margin-bottom: 18px; }
+        .form-row label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: #3a4552;
+        }
+        .form-row input[type="text"],
+        .form-row input[type="number"],
+        .form-row input[type="datetime-local"],
+        .form-row select {
+            width: 100%;
+            max-width: 420px;
+            padding: 8px 12px;
+            border: 1px solid #d5dae0;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+            background: #fff;
+        }
+        .form-row input:focus,
+        .form-row select:focus {
+            border-color: #1890ff;
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, .15);
+        }
+
+        /* ModelForm 渲染的控件统一使用 form-control 样式 */
+        .form-control {
+            width: 100%;
+            max-width: 420px;
+            padding: 8px 12px;
+            border: 1px solid #d5dae0;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+            background: #fff;
+        }
+        .form-control:focus {
+            border-color: #1890ff;
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, .15);
+        }
+        .field-error {
+            display: block;
+            color: #dd3737;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        /* 列表页顶部工具栏：左侧按钮、右侧搜索 */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .search-form { display: flex; align-items: center; gap: 8px; }
+        .search-form input[type="text"],
+        .filter-form input[type="text"],
+        .filter-form select {
+            width: 200px;
+            padding: 8px 12px;
+            border: 1px solid #d5dae0;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+            background: #fff;
+        }
+        .filter-form {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .filter-form input[type="text"]:focus,
+        .filter-form select:focus {
+            border-color: #1890ff;
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, .15);
+        }
+        .btn-search { background: #2b7bcc; color: #fff; }
+        .btn-reset { background: #9aa5b1; color: #fff; }
+
+        /* 分页条 */
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 16px;
+            flex-wrap: wrap;
+            border-top: 1px solid #eef0f2;
+        }
+        .page-btn {
+            display: inline-block;
+            padding: 5px 12px;
+            border: 1px solid #d5dae0;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #3a4552;
+            background: #fff;
+            cursor: pointer;
+        }
+        .page-btn:hover { color: #1890ff; border-color: #1890ff; }
+        .page-btn.current { background: #2b7bcc; color: #fff; border-color: #2b7bcc; }
+        .page-btn.disabled { color: #c0c6ce; cursor: not-allowed; }
+        .page-info { margin-left: auto; font-size: 13px; color: #606a76; }
+        .page-jump { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #606a76; }
+        .page-jump input[type="number"] {
+            width: 52px;
+            padding: 5px 8px;
+            border: 1px solid #d5dae0;
+            border-radius: 4px;
+            font-size: 13px;
+            outline: none;
+        }
+        .page-jump button {
+            border: none;
+            background: #2b7bcc;
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .page-jump button:hover { opacity: .85; }
+    </style>
+    {% block css %}{% endblock %}
+</head>
+<body>
+
+<!-- 顶部导航（所有页面共用） -->
+<nav class="navbar">
+    <span class="brand">联通用户管理系统</span>
+    <div class="nav-menu">
+        <div class="nav-item">
+            <a class="nav-link" href="/depart/list/">部门管理<span class="caret">▾</span></a>
+            <div class="dropdown">
+                <a href="/depart/list/">部门列表</a>
+                <a href="/depart/add/">新建部门</a>
+            </div>
+        </div>
+        <div class="nav-item">
+            <a class="nav-link" href="/user/list/">用户管理<span class="caret">▾</span></a>
+            <div class="dropdown">
+                <a href="/user/list/">用户列表</a>
+                <a href="/user/modelform/add/">新建用户</a>
+            </div>
+        </div>
+        <div class="nav-item">
+            <a class="nav-link" href="/prettynum/list/">靓号管理<span class="caret">▾</span></a>
+            <div class="dropdown">
+                <a href="/prettynum/list/">靓号列表</a>
+                <a href="/prettynum/add/">新建靓号</a>
+            </div>
+        </div>
+    </div>
+    <div class="nav-user">
+        <a class="login-link" href="#">登录</a>
+        <span class="user-toggle">余远杰 ▾</span>
+        <div class="dropdown">
+            <a href="#">个人资料</a>
+            <a href="#">我的信息</a>
+            <div class="divider"></div>
+            <a href="#">注销</a>
+        </div>
+    </div>
+</nav>
+
+<!-- 子页面内容填充区域 -->
+<div class="container">
+    {% block content %}
+    {% endblock %}
+</div>
+
+{% block js %}{% endblock %}
+
+</body>
+</html>

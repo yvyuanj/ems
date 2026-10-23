@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{# 修改靓号页（ModelForm 版）：form 自动回显并校验 #}
+{% block content %}
+<div class="panel">
+    <div class="panel-title">修改靓号</div>
+    <div class="form-body">
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {# instance 传入后，控件 value 会自动回显已有数据 #}
+            {% for field in form %}
+            <div class="form-row">
+                <label>{{ field.label }}</label>
+                {{ field }}
+                <span class="field-error">{{ field.errors.0 }}</span>
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-success">提 交</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

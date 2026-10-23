@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{# 修改用户页：回显用户数据，提交后更新 #}
+{% block content %}
+<div class="panel">
+    <div class="panel-title">修改用户</div>
+    <div class="form-body">
+        <form method="post">
+            {% csrf_token %}
+            {# 用 row_object 回显各字段当前值 #}
+            <div class="form-row">
+                <label>姓名</label>
+                <input type="text" name="name" value="{{ row_object.name }}" required>
+            </div>
+            <div class="form-row">
+                <label>密码</label>
+                <input type="text" name="password" value="{{ row_object.password }}" required>
+            </div>
+            <div class="form-row">
+                <label>年龄</label>
+                <input type="number" name="age" value="{{ row_object.age }}" required>
+            </div>
+            <div class="form-row">
+                <label>账户余额</label>
+                <input type="number" step="0.01" max="99999999.99" name="account" value="{{ row_object.account }}" required>
+            </div>
+            <div class="form-row">
+                <label>入职时间</label>
+                <input type="datetime-local" name="create_time" value="{{ row_object.create_time|date:'Y-m-d\TH:i' }}" required>
+            </div>
+            {# 性别/部门下拉：根据当前值选中对应项 #}
+            <div class="form-row">
+                <label>性别</label>
+                <select name="gender">
+                    <option value="1" {% if row_object.gender == 1 %}selected{% endif %}>男</option>
+                    <option value="2" {% if row_object.gender == 2 %}selected{% endif %}>女</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <label>所属部门</label>
+                <select name="depart_id">
+                    {% for d in depart_list %}
+                    <option value="{{ d.id }}" {% if row_object.depart_id == d.id %}selected{% endif %}>{{ d.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success">提 交</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

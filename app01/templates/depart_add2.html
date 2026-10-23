@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>新建部门</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif; background: #f4f6f9; color: #333; }
+        a { text-decoration: none; }
+        .navbar {
+            background: #fff; border-bottom: 1px solid #e6e8eb;
+            box-shadow: 0 1px 4px rgba(0,0,0,.06);
+            display: flex; align-items: center; padding: 0 24px; height: 56px;
+            position: relative; z-index: 100;
+        }
+        .brand { font-size: 20px; font-weight: 700; color: #1f2d3d; margin-right: 36px; }
+        .nav-menu { display: flex; align-items: center; gap: 6px; }
+        .nav-item { position: relative; }
+        .nav-link { display: block; padding: 10px 16px; color: #3a4552; font-size: 15px; border-radius: 4px; }
+        .nav-link:hover { background: #eef2f7; color: #1890ff; }
+        .nav-link .caret { font-size: 11px; margin-left: 4px; color: #9aa5b1; }
+        .dropdown {
+            display: none; position: absolute; top: 100%; left: 0; min-width: 150px;
+            background: #fff; border: 1px solid #e6e8eb; border-radius: 6px;
+            box-shadow: 0 4px 16px rgba(0,0,0,.12); padding: 6px 0;
+        }
+        .nav-item:hover .dropdown { display: block; }
+        .dropdown a { display: block; padding: 9px 18px; color: #3a4552; font-size: 14px; }
+        .dropdown a:hover { background: #f0f6ff; color: #1890ff; }
+        .dropdown .divider { height: 1px; background: #eee; margin: 6px 0; }
+        .nav-user { margin-left: auto; position: relative; display: flex; align-items: center; gap: 10px; }
+        .nav-user .login-link { color: #3a4552; font-size: 15px; }
+        .nav-user .login-link:hover { color: #1890ff; }
+        .user-toggle { cursor: pointer; color: #3a4552; font-size: 15px; padding: 10px 4px; }
+        .nav-user:hover .dropdown { display: block; }
+        .nav-user .dropdown { right: 0; left: auto; }
+
+        .container { max-width: 1200px; margin: 24px auto; padding: 0 24px; }
+        .panel { background: #fff; border: 1px solid #e6e8eb; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.04); }
+        .panel-title { padding: 12px 16px; background: #f7f8fa; border-bottom: 1px solid #e6e8eb; font-size: 16px; font-weight: 600; }
+        .form-body { padding: 24px; }
+        .form-row { margin-bottom: 18px; }
+        .form-row label { display: block; margin-bottom: 6px; font-size: 14px; color: #3a4552; }
+        .form-row input[type="text"] {
+            width: 100%; max-width: 420px; padding: 8px 12px;
+            border: 1px solid #d5dae0; border-radius: 4px; font-size: 14px; outline: none;
+        }
+        .form-row input[type="text"]:focus { border-color: #1890ff; box-shadow: 0 0 0 2px rgba(24,144,255,.15); }
+        .btn { display: inline-block; border: none; border-radius: 4px; padding: 8px 16px; font-size: 15px; cursor: pointer; }
+        .btn:hover { opacity: .85; }
+        .btn-success { background: #34b950; color: #fff; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <span class="brand">联通用户管理系统</span>
+    <div class="nav-menu">
+        <div class="nav-item">
+            <a class="nav-link" href="/depart/list/">部门管理<span class="caret">▾</span></a>
+            <div class="dropdown">
+                <a href="/depart/list/">部门列表</a>
+                <a href="/depart/add/">新建部门</a>
+            </div>
+        </div>
+        <div class="nav-item">
+            <a class="nav-link" href="#">用户管理<span class="caret">▾</span></a>
+            <div class="dropdown">
+                <a href="#">用户列表</a>
+                <a href="#">新建用户</a>
+            </div>
+        </div>
+        <div class="nav-item">
+            <a class="nav-link" href="#">Link<span class="caret">▾</span></a>
+            <div class="dropdown">
+                <a href="#">链接一</a>
+                <a href="#">链接二</a>
+            </div>
+        </div>
+    </div>
+    <div class="nav-user">
+        <a class="login-link" href="#">登录</a>
+        <span class="user-toggle">余远杰 ▾</span>
+        <div class="dropdown">
+            <a href="#">个人资料</a>
+            <a href="#">我的信息</a>
+            <div class="divider"></div>
+            <a href="#">注销</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="panel">
+        <div class="panel-title">新建部门</div>
+        <div class="form-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-row">
+                    <label>标题</label>
+                    <input type="text" name="title" placeholder="请输入部门名称">
+                </div>
+                <button type="submit" class="btn btn-success">提 交</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

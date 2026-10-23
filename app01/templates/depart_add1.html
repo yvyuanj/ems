@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{# 新增部门页：标题输入 + 提交 #}
+{% block content %}
+<div class="panel">
+    <div class="panel-title">新建部门</div>
+    <div class="form-body">
+        {# POST 表单：提交后保存到数据库 #}
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-row">
+                <label>标题</label>
+                <input type="text" name="title" placeholder="请输入部门名称">
+            </div>
+            <button type="submit" class="btn btn-success">提 交</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{# 修改部门页：回显原标题，提交后更新 #}
+{% block content %}
+<div class="panel">
+    <div class="panel-title">修改部门</div>
+    <div class="form-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-row">
+                <label>标题</label>
+                {# value 回显当前部门名称 #}
+                <input type="text" name="title" value="{{ row_object.title }}">
+            </div>
+            <button type="submit" class="btn btn-success">提 交</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

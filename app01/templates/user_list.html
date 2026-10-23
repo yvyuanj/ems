@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+{# 用户列表页：新建按钮 + 用户表格 #}
+{% block content %}
+<div class="panel">
+    {# 顶部：新建用户按钮（走 ModelForm） #}
+    <div class="panel-body">
+        <a class="btn btn-success" href="/user/modelform/add/">➕ 新建用户</a>
+    </div>
+
+    <div class="table-title">▦ 用户列表</div>
+
+    {# 用户表格：循环渲染每行，带编辑/删除 #}
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>姓名</th>
+            <th>密码</th>
+            <th>年龄</th>
+            <th>账户余额</th>
+            <th>入职时间</th>
+            <th>性别</th>
+            <th>所属部门</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for obj in page_obj %}
+        <tr>
+            <td>{{ obj.id }}</td>
+            <td>{{ obj.name }}</td>
+            <td>{{ obj.password }}</td>
+            <td>{{ obj.age }}</td>
+            <td>{{ obj.account }}</td>
+            <td>{{ obj.create_time|date:"Y-m-d" }}</td>
+            <td>{{ obj.get_gender_display }}</td>
+            <td>{{ obj.depart.title }}</td>
+            <td>
+                {# 编辑走 ModelForm 路由；删除带确认框 #}
+                <a href="/user/modelform/edit/{{ obj.id }}/">
+                    <button class="btn btn-edit">编辑</button>
+                </a>
+                <a href="/user/delete/?nid={{ obj.id }}" onclick="return confirm('确定删除？')">
+                    <button class="btn btn-del">删除</button>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {# 分页条 #}
+    {% include "pagination.html" %}
+</div>
+{% endblock %}

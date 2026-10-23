@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{# 新增靓号页（ModelForm 版）：form 自动渲染字段并显示错误 #}
+{% block content %}
+<div class="panel">
+    <div class="panel-title">新建靓号</div>
+    <div class="form-body">
+        {# novalidate：关闭浏览器默认校验，交给后端表单校验 #}
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {# 循环 form 里的每个字段：label + 控件 + 错误提示 #}
+            {% for field in form %}
+            <div class="form-row">
+                <label>{{ field.label }}</label>
+                {{ field }}
+                <span class="field-error">{{ field.errors.0 }}</span>
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-success">提 交</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

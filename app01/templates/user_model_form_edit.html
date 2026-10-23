@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+{% load static %}
+{# 修改用户（ModelForm 版）：form 自动回显并校验 #}
+
+{% block css %}{% endblock %}
+
+{% block content %}
+<div class="panel">
+    <div class="panel-title">修改用户</div>
+    <div class="form-body">
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-row">
+                <label>{{ field.label }}</label>
+                {{ field }}
+                <span class="field-error">{{ field.errors.0 }}</span>
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-success">提交</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}{% endblock %}

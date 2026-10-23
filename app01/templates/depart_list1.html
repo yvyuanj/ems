@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{# 部门列表页 #}
+{% block content %}
+<div class="panel">
+    {# 顶部：新建按钮 #}
+    <div class="panel-body">
+        <a class="btn btn-success" href="/depart/add/">➕ 新建部门</a>
+    </div>
+
+    <div class="table-title">▦ 部门列表</div>
+
+    {# 部门表格：循环渲染每行，带编辑/删除按钮 #}
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>名称</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for obj in page_obj %}
+        <tr>
+            <td>{{ obj.id }}</td>
+            <td>{{ obj.title }}</td>
+            <td>
+                <a href="/depart/{{ obj.id }}/edit/">
+                    <button class="btn btn-edit">编辑</button>
+                </a>
+                <a href="/depart/delete/?nid={{ obj.id }}" onclick="return confirm('确定删除？')">
+                    <button class="btn btn-del">删除</button>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {# 分页条 #}
+    {% include "pagination.html" %}
+</div>
+{% endblock %}
